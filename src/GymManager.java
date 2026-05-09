@@ -66,9 +66,13 @@ public class GymManager implements GymOperations {
         }
     }
     public Trainer findTrainerById(String id) {
-        for (int i = 0; i < trainers.size(); i++) {
+        // CO3: Advanced logic to handle case-insensitivity
+        if (id == null || id.trim().isEmpty()) {
+            return null;
+        }
 
-            if (trainers.get(i).id.equals(id)) {
+        for (int i = 0; i < trainers.size(); i++) {
+            if (trainers.get(i).id.equalsIgnoreCase(id.trim())) {
                 return trainers.get(i);
             }
         }

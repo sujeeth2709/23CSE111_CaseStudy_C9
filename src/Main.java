@@ -60,13 +60,21 @@ public class Main {
                     break;
 
                 case 4:
-                    System.out.println("Enter Trainer ID to view schedule (e.g., Tr-FatLoss): ");
-                    String tid = sc.nextLine();
-                    Trainer foundTrainer = manager.findTrainerById(tid);
-                    if (foundTrainer != null) {
-                        foundTrainer.getSchedule();
-                    } else {
-                        System.out.println("Trainer not found.");
+                    try {
+                        System.out.println("Enter Trainer ID (e.g., T1, T2): ");
+                        String tid = sc.nextLine();
+
+                        Trainer foundTrainer = manager.findTrainerById(tid);
+
+                        if (foundTrainer != null) {
+
+                            foundTrainer.getSchedule();
+                        } else {
+                            System.out.println(">>> Error: No trainer found with ID '" + tid + "'. (Search is case-insensitive)");
+                        }
+                    } catch (Exception e) {
+
+                        System.out.println("An error occurred during search: " + e.getMessage());
                     }
                     break;
 
