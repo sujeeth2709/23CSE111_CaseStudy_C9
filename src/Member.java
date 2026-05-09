@@ -39,11 +39,18 @@ public class Member extends Person {
             System.out.println("Access Denied for " + name + ". Please renew.");
         }
     }
-
     @Override
     public void displayProfile() {
-        System.out.println("Member [ID: " + id + ", Name: " + name + ", Plan: " + plan.getPlanName() + ", Expiry: " + expiryDate + "]");
+        System.out.println("------------------------------------------");
+        System.out.println("Member ID: " + id);
+        System.out.println("Name: " + name);
+        plan.getPlanDetails();
+        plan.getDiscount();
+
+        System.out.println("Expiry Date: " + expiryDate);
+        System.out.println("------------------------------------------");
     }
+
 
     public String getId() { return id; }
     public Date getExpiryDate() { return expiryDate; }
