@@ -12,7 +12,7 @@ public class MembershipPlan{
     }
 
     public void getPlanDetails(){
-        System.out.println("Plan: "+planName+" | Duration: "+durationInMonths+" months | Price: $"+price);
+        System.out.println("Plan: "+planName+" | Duration: "+durationInMonths+" months | Price: Rs"+price);
     }
 
     public void getDiscount(){
