@@ -1,48 +1,48 @@
 package Gym_management_system;
 
-public class Trainer extends Person{
+import java.util.ArrayList;
+
+public class Trainer extends Person {
     private String specialization;
-    private Member[]assignedMembers;
-    private int memberCount;
+    private ArrayList<Member> assignedMembers; // CO4: ArrayList for dynamic membership
     private double salary;
 
-    public Trainer(String id,String name,String phoneNumber,String email,String specialization,double salary){
-        super(id,name,phoneNumber,email);
-        this.specialization=specialization;
-        this.salary=salary;
-        this.assignedMembers=new Member[10];
-        this.memberCount=0;
+    public Trainer(String id, String name, String phone, String email, String spec, double salary) {
+        super(id, name, phone, email);
+        this.specialization = spec;
+        this.salary = salary;
+        this.assignedMembers = new ArrayList<>();
     }
 
-    public void assignMember(Member m){
-        if(memberCount>=assignedMembers.length){
-            System.out.println("Trainer "+name+" already has maximum members.");
-            return;
-        }
-        assignedMembers[memberCount++]=m;
-        System.out.println(m.name+" assigned to trainer "+this.name);
+    public void assignMember(Member m) {
+        assignedMembers.add(m);
+        System.out.println(m.name + " assigned to trainer " + this.name);
     }
 
-    public void removeMember(Member m){
-        for(int i=0;i<memberCount;i++){
-            if(assignedMembers[i]!=null&&assignedMembers[i].getId().equals(m.getId())){
-                assignedMembers[i]=assignedMembers[memberCount-1];
-                assignedMembers[memberCount-1]=null;
-                memberCount--;
-                System.out.println("Removed "+m.name+" from trainer "+name);
+    public void removeMember(Member m) {
+        for (int i = 0; i < assignedMembers.size(); i++) {
+            if (assignedMembers.get(i).getId().equals(m.getId())) {
+                assignedMembers.remove(i);
+                System.out.println("Removed " + m.name + " from " + name);
                 return;
             }
         }
     }
-
-    public void getSchedule(){
-        System.out.println("--- Schedule for "+name+" ---");
-        System.out.println("Specialization: "+specialization);
-        System.out.println("Currently training "+memberCount+" members.");
+    public void getSchedule() {
+        System.out.println("\n--- Schedule for " + name + " ---");
+        System.out.println("Specialization: " + specialization);
+        if (assignedMembers.isEmpty()) {
+            System.out.println("Status: No members currently assigned.");
+        } else {
+            System.out.println("Assigned Members:");
+            for (int i = 0; i < assignedMembers.size(); i++) {
+                Member m = assignedMembers.get(i);
+                System.out.println(" - " + m.name + " (ID: " + m.getId() + ")");
+            }
+        }
     }
-
     @Override
-    public void displayProfile(){
-        System.out.println("Trainer [ID: "+id+", Name: "+name+", Specialization: "+specialization+"]");
+    public void displayProfile() {
+        System.out.println("Trainer [ID: " + id + ", Name: " + name + ", Specialty: " + specialization + "]");
     }
 }

@@ -2,121 +2,100 @@ package Gym_management_system;
 
 import java.util.Scanner;
 
-public class Main{
-    public static void main(String[]args){
-        Scanner sc=new Scanner(System.in);
-        GymManager manager=new GymManager(10,5);
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        GymManager manager = new GymManager();
 
         int choice;
 
-        do{
+        do {
             System.out.println("\n--- GYM MANAGEMENT SYSTEM ---");
-            System.out.println("1.Register Member");
-            System.out.println("2.Find Member");
-            System.out.println("3.Remove Expired Members");
-            System.out.println("4.Revenue Report");
-            System.out.println("5.Show All Members");
-            System.out.println("6.Show All Trainers");
-            System.out.println("7.Save to File");
-            System.out.println("8.Load from File");
-            System.out.println("9.Exit");
-            System.out.println("Enter choice: ");
+            System.out.println("1. Register Member");
+            System.out.println("2. Show All Members");
+            System.out.println("3. Show All Trainers");
+            System.out.println("4. View Specific Trainer Schedule");
+            System.out.println("5. Remove Expired Members");
+            System.out.println("6. Revenue Report");
+            System.out.println("7. Save/Load Data");
+            System.out.println("8. Exit");
+            System.out.print("Enter choice: ");
 
-            choice=sc.nextInt();
+            while (!sc.hasNextInt()) {
+                System.out.println("Please enter a valid number.");
+                sc.next();
+            }
+            choice = sc.nextInt();
             sc.nextLine();
 
-            switch(choice){
-
+            switch (choice) {
                 case 1:
-                    MembershipPlan plan=null;
+                    System.out.println("Select Plan: 1.Monthly 2.Quarterly 3.Yearly");
+                    int p = sc.nextInt(); sc.nextLine();
+                    MembershipPlan plan = (p==1) ? new MembershipPlan("Monthly", 1, 50) :
+                            (p==2) ? new MembershipPlan("Quarterly", 3, 120) :
+                                    new MembershipPlan("Yearly", 12, 500);
 
-                    System.out.println("1.Monthly 2.Quarterly 3.Yearly\n");
-                    int p=sc.nextInt();
-                    sc.nextLine();
+                    System.out.print("ID: "); String id = sc.nextLine();
+                    System.out.print("Name: "); String name = sc.nextLine();
+                    Member member = new Member(id, name, "000", "email@gym.com", plan);
 
-                    if(p==1)plan=new MembershipPlan("Monthly",1,50);
-                    else if(p==2)plan=new MembershipPlan("Quarterly",3,120);
-                    else if(p==3)plan=new MembershipPlan("Yearly",12,500);
-                    else break;
-
-                    System.out.print("ID: ");
-                    String id=sc.nextLine();
-                    System.out.print("Name: ");
-                    String name=sc.nextLine();
-                    System.out.print("Phone: ");
-                    String phone=sc.nextLine();
-                    System.out.print("Email: ");
-                    String email=sc.nextLine();
-
-                    Member member=new Member(id,name,phone,email,plan);
-
-                    boolean added=manager.registerMember(member);
-                    if(!added)break;
-
-                    System.out.println("Assign Trainer? 1.Yes 2.No");
-                    int assign=sc.nextInt();
-
-                    if(assign==1){
-                        System.out.println("1.FatLoss 2.Bodybuilding 3.Strength 4.General");
-                        int t=sc.nextInt();
-
-                        String spec="";
-                        String tid="";
-
-                        if(t==1){spec="FatLoss";tid="T1";}
-                        else if(t==2){spec="Bodybuilding";tid="T2";}
-                        else if(t==3){spec="Strength";tid="T3";}
-                        else if(t==4){spec="General";tid="T4";}
-                        else break;
-
-                        Trainer trainer=manager.getOrCreateTrainer(tid,spec+" Trainer","9000000000",spec+"@gym.com",spec,3000);
-
-                        if(trainer!=null){
+                    if (manager.registerMember(member)) {
+                        System.out.println("Assign Trainer? 1.FatLoss 2.Strength 3.No");
+                        int tChoice = sc.nextInt(); sc.nextLine();
+                        if (tChoice != 3) {
+                            String spec = (tChoice == 1) ? "FatLoss" : "Strength";
+                            Trainer trainer = manager.getOrCreateTrainer("Tr-" + spec, spec + " Coach", spec, 3000.0);
                             trainer.assignMember(member);
-                            trainer.getSchedule();
                         }
                     }
                     break;
 
                 case 2:
-                    System.out.print("Enter ID: ");
-                    manager.findMemberById(sc.nextLine());
-                    break;
-
-                case 3:
-                    manager.removeExpiredMembers();
-                    break;
-
-                case 4:
-                    manager.generateRevenueReport();
-                    break;
-
-                case 5:
                     manager.showAllMembers();
                     break;
 
-                case 6:
+                case 3:
                     manager.showAllTrainers();
                     break;
 
+                case 4:
+                    try {
+                        System.out.println("Enter Trainer ID (e.g., T1, T2): ");
+                        String tid = sc.nextLine();
+
+                        Trainer foundTrainer = manager.findTrainerById(tid);
+
+                        if (foundTrainer != null) {
+
+                            foundTrainer.getSchedule();
+                        } else {
+                            System.out.println(">>> Error: No trainer found with ID '" + tid + "'. (Search is case-insensitive)");
+                        }
+                    } catch (Exception e) {
+
+                        System.out.println("An error occurred during search: " + e.getMessage());
+                    }
+                    break;
+
+                case 5:
+                    manager.removeExpiredMembers();
+                    break;
+
+                case 6:
+                    manager.generateRevenueReport();
+                    break;
+
                 case 7:
-                    manager.saveMembersToFile("gym_members.txt");
+                    manager.saveToFile("gym_data.txt");
+                    manager.loadFromFile("gym_data.txt");
                     break;
 
                 case 8:
-                    manager.loadMembersFromFile("gym_members.txt");
-                    break;
-
-                case 9:
                     System.out.println("Exiting...");
                     break;
-
-                default:
-                    System.out.println("Invalid choice");
             }
-
-        }while(choice!=9);
-
+        } while (choice != 8);
         sc.close();
     }
 }
