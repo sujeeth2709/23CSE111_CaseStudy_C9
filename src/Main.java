@@ -30,15 +30,24 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    System.out.println("Select Plan: 1.Monthly 2.Quarterly 3.Yearly");
+                    System.out.println("Select Plan: ");
+                    MembershipPlan monthly = new MembershipPlan("Monthly", 1, 500);
+                    MembershipPlan quarterly = new MembershipPlan("Quarterly", 3, 1200);
+                    MembershipPlan yearly = new MembershipPlan("Yearly", 12, 5000);
+
+                    System.out.print("1. "); monthly.getPlanDetails();
+                    System.out.print("2. "); quarterly.getPlanDetails();
+                    System.out.print("3. "); yearly.getPlanDetails();
+
+                    System.out.print("Select Plan: ");
                     int p = sc.nextInt(); sc.nextLine();
-                    MembershipPlan plan = (p==1) ? new MembershipPlan("Monthly", 1, 50) :
-                            (p==2) ? new MembershipPlan("Quarterly", 3, 120) :
-                                    new MembershipPlan("Yearly", 12, 500);
+
+                    MembershipPlan selectedPlan = (p == 1) ? monthly : (p == 2) ? quarterly : yearly;
 
                     System.out.print("ID: "); String id = sc.nextLine();
                     System.out.print("Name: "); String name = sc.nextLine();
-                    Member member = new Member(id, name, "000", "email@gym.com", plan);
+
+                    Member member = new Member(id, name, "000", "email@gym.com", selectedPlan);
 
                     if (manager.registerMember(member)) {
                         System.out.println("Assign Trainer? 1.FatLoss 2.Strength 3.No");
