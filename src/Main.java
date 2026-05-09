@@ -61,7 +61,7 @@ public class Main {
 
                 case 4:
                     try {
-                        System.out.println("Enter Trainer ID (e.g., T1, T2): ");
+                        System.out.println("Enter Trainer ID (e.g., Tr-FatLoss): ");
                         String tid = sc.nextLine();
 
                         Trainer foundTrainer = manager.findTrainerById(tid);
